@@ -1,0 +1,65 @@
+---
+title: "Shiny App Final Project"
+author: "Sergio Cruz"
+date: "15 de julio de 2017"
+output:
+  ioslides_presentation:
+    smaller: true
+    fig_width: 7
+    fig_height: 3
+    fig_caption: true
+---
+
+## Executive Summary
+My final project is about the results of the Presidential elections in Chile in the period between 1989 and 2013. The Shiny App interactively shows the results for different years and rounds. In fact, it shows the results at national, regional, and county levels. The user can switch years, rounds, regions and counties.
+
+It gets the data from the Chilean Electoral National Service, then it manipulates the data set, and runs Shiny ui.R and Server.R codes. It uses several tabs to present the results at different levels. It also uses googleVis to present charts and maps which summarize different views. 
+
+My first Shiny App is running on the Shiny site. Please, check it out at https://scruz03.shinyapps.io/Developing-Data-Products/
+
+<div class="red2">
+Please, notice that there could be some issues with viewing the presentation on a Firefox browser. According to the comments in the lecture's forum, so please, use Chrome, Edge or Internet Explorer, etc.
+</div>
+
+
+## Brief description of the steps taken
+
+- Firstly, I did get the data from the Chilean National Electoral Service (http://www.servel.cl). 
+- Secondly, I did several data transformation operations to get the data in the proper way before using it in Shiny. I had some problems when trying to upload the application to the server because the data was not found. So I learnt that I needed to put the preprocessing code in the files ui.R and Server.R before the Shiny applications. This was to have the App self-contained.
+- Thirdly, I used the package "googleVis" to build several charts. I found some challenges such as problems when trying to get the chorophlets maps, as googleVis did not recognized some of the region names. So I had to use regions codes as additional information.
+- Fourthly, I included messages in the different tabs, as documentation. Although I think the App is friendly, the user need to enter some data, such as the Year of election, round, region and county, to have all the tabs running.
+- Fifthly, one thing that I had to consider was reactive inputs, as in some elections (1989 and 1993) there was only one round, but in the others there were two rounds (the second usually called "Ballotage"). So I had to code allowing that some years showed a "unique" round, and the rest showed "First" and "Ballotage" as choices of rounds.
+
+---
+- Sixtly, I had also to consider that two new regions were created in 2008. So I had to adjust the regions depending on the year.
+- Finally, I also included reactive inputs regarding regions, at the beginning I had all the counties displayed. However, counties are related with specific regions. So I did include reactive inputs in this part as well. In order to have all the data updated, I included the button "Update View".
+- See Exhibit 1 showing the valid age population (VAP) (people who have the right to vote). VAP is in million of people. In the chart the number 1 in year means first round, and B Ballotage.
+-  This is just as an example using ggplot instead of googleVis. However, as you will see in the App the charts looks better using googleVis.
+
+```{r, eval = TRUE, results='hide', message=FALSE,  echo=FALSE}
+## Added extra information about tournout (participation) in different
+#Year = as.integer(c(1989, 1993,1999,1999,2005,2005,2009,2009,2013,2013))
+Year = c("1989", "1993","1999(1)","1999(B)","2005(1)","2005(B)",
+         "2009(1)","2009(B)","2013(1)","2013(B)")
+Round = c("Unique","Unique","First","Ballotage","First","Ballotage",
+          "First","Ballotage","First","Ballotage")
+VAP = c(8.239545,9.052632,10.126098, 10.126098,11.344218,
+                  11.344218,12.268311,12.268311,13.153415,13.153415)
+Turnout = c(86.9,81.6,71.8,72.4,63.5,63.1,59.2,58.7,50.9,43.3)
+#Par =data.frame(Year,Round,VAP,Turnout)
+#Par
+Par1 =data.frame(Year,Round,VAP,Turnout)
+Par1
+```
+
+```{r, eval = TRUE, echo=FALSE}
+library(ggplot2)
+g = ggplot(Par1)  + 
+    geom_bar(aes(x=Year, y=VAP),stat="identity", fill="tan1", colour="sienna3")
+g
+
+```
+
+<div class="centered">
+## Thanks for your attention
+</div>
